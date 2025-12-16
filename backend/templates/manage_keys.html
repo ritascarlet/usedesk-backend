@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление подписками</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #60a5fa 0%, #2563eb 70%, #1e40af 100%);
+            margin: 0;
+            padding: 24px;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; transform: scale(0.98); }
+            50% { opacity: 0.9; transform: scale(1.0); }
+            100% { opacity: 0.7; transform: scale(0.98); }
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(60px);
+            border-radius: 32px;
+            padding: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+        .inner-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(60px);
+            border-radius: 28px;
+            padding: 28px;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .title {
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            font-weight: 600;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+        .subscription-card {
+            background: rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(60px);
+            border-radius: 28px;
+            padding: 18px 24px;
+            margin-bottom: 16px;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 36px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .subscription-card:hover {
+            transform: translateY(-4px) scale(1.015);
+            box-shadow: 0 28px 68px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.18);
+        }
+        .subscription-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+            border-radius: 28px 28px 0 0;
+        }
+        .subscription-name {
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .subscription-expires {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .quickinstall-btn {
+            background: rgba(79, 172, 254, 0.22);
+            backdrop-filter: blur(60px);
+            color: #ffffff;
+            border: none;
+            border-radius: 24px;
+            padding: 14px 24px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 10px 36px rgba(79, 172, 254, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .quickinstall-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 52px rgba(79, 172, 254, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            background: rgba(79, 172, 254, 0.28);
+        }
+        .replace-key-btn {
+            background: rgba(239, 68, 68, 0.22);
+            backdrop-filter: blur(60px);
+            color: #ffffff;
+            border: none;
+            border-radius: 24px;
+            padding: 14px 24px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 10px 36px rgba(239, 68, 68, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            margin-left: 12px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .replace-key-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 52px rgba(239, 68, 68, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            background: rgba(239, 68, 68, 0.28);
+        }
+        .button-container {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .back-btn {
+            background: rgba(255, 255, 255, 0.17);
+            backdrop-filter: blur(60px);
+            color: #ffffff;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 24px;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 10px 36px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 52px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.22);
+        }
+        
+        .subscription-card {
+            opacity: 1;
+        }
+        
+        .cache-delete-btn {
+            background: rgba(255, 140, 0, 0.22);
+            backdrop-filter: blur(60px);
+            color: #ffffff;
+            border: none;
+            border-radius: 24px;
+            padding: 11px 22px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 10px 36px rgba(255, 140, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .cache-delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 52px rgba(255, 140, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            background: rgba(255, 140, 0, 0.28);
+        }
+        .split-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 1024px) {
+            .split-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .devices-panel {
+            background: rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(60px);
+            border-radius: 28px;
+            padding: 24px;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 36px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            position: sticky;
+            top: 24px;
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+        }
+        .devices-title {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 18px;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .device-card {
+            background: rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(60px);
+            border-radius: 26px;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 36px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .device-card:hover {
+            transform: translateY(-4px) scale(1.015);
+            box-shadow: 0 28px 68px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .device-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+            border-radius: 26px 26px 0 0;
+        }
+        .device-field {
+            color: #ffffff;
+            font-size: 13px;
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .device-field-label {
+            opacity: 0.9;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .device-field-value {
+            font-weight: 800;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+            word-break: break-all;
+        }
+        .device-delete-btn {
+            margin-top: 14px;
+            width: 100%;
+            padding: 11px 18px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 800;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(239, 68, 68, 0.22);
+            backdrop-filter: blur(60px);
+            color: #ffffff;
+            border: 1.5px solid rgba(239, 68, 68, 0.45);
+            box-shadow: 0 10px 36px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .device-delete-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            border-radius: 20px 20px 0 0;
+        }
+        .device-delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 52px rgba(239, 68, 68, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            background: rgba(239, 68, 68, 0.28);
+        }
+        .no-devices {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+            font-weight: 700;
+            padding: 20px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .error-message {
+            background: rgba(239, 68, 68, 0.22);
+            backdrop-filter: blur(60px);
+            border-radius: 24px;
+            padding: 14px 20px;
+            margin-bottom: 14px;
+            border: 1.5px solid rgba(239, 68, 68, 0.45);
+            box-shadow: 0 10px 36px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 800;
+            text-align: center;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .error-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            border-radius: 24px 24px 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="inner-container">
+            <a href="javascript:window.close();" class="back-btn">← Назад</a>
+            
+            <div class="header">
+                <!-- Заголовок в стиле Apple Liquid Glass -->
+                <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(60px); border-radius: 28px; padding: 22px 26px; border: 1.5px solid rgba(255, 255, 255, 0.3); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35); position: relative; overflow: hidden; margin-bottom: 18px;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent); border-radius: 28px 28px 0 0;"></div>
+                    <div class="title">🔐 Управление подписками</div>
+                    <div class="subtitle">Клиент: {{ client_name }} | Telegram: {{ telegram_username }}</div>
+                </div>
+                
+                <!-- Кнопка удаления кеша -->
+                <div style="margin-top: 18px;">
+                    <button class="cache-delete-btn" onclick="deleteClientCache('{{ client_id }}', '{{ telegram_uid }}')">
+                        🗑️ Удалить кеш клиента
+                    </button>
+                </div>
+            </div>
+            
+            <div class="split-container">
+                <!-- Левая колонка: Подписки -->
+                <div>
+                    {% for subscription in subscriptions_data %}
+                    <div class="subscription-card">
+                        <div class="subscription-name">{{ subscription.name }}</div>
+                        <div class="subscription-expires">До: {{ subscription.expires }}</div>
+                        <div class="button-container">
+                            <button class="quickinstall-btn" onclick="copyToClipboard('{{ subscription.quickinstall }}')">
+                                📋 Скопировать QuickInstall
+                            </button>
+                            {% if (subscription.status == 'active' or subscription.status == 'expiring') and not subscription.is_router %}
+                            <button class="replace-key-btn" onclick="replaceKey('{{ subscription.uuid or 'no-uuid' }}', '{{ subscription.name }}')">
+                                🔄 Заменить ключ
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Правая колонка: HWID устройства RemnaWave -->
+                <div class="devices-panel">
+                    <div class="devices-title">
+                        <span>📱</span>
+                        <span>HWID Устройства</span>
+                    </div>
+                    
+                    {% if remnawave_error %}
+                        {% if remnawave_error == 'no_remnawave_user' or remnawave_error == 'no_remnawave_subscription' %}
+                        <div class="no-devices">ℹ️ У юзера нет подписки RemnaWave</div>
+                        {% elif remnawave_error == 'api_unauthorized' %}
+                        <div class="error-message">🚨 Опа, api ремны чет не пашет... Напиши Саше, он разберется)</div>
+                        {% else %}
+                        <div class="error-message">⚠️ RemnaWave API недоступен</div>
+                        {% endif %}
+                    {% elif remnawave_devices and remnawave_devices|length > 0 %}
+                        {% for device in remnawave_devices %}
+                        <div class="device-card">
+                            <div class="device-field">
+                                <span class="device-field-label">Платформа:</span>
+                                <span class="device-field-value">
+                                    {% if 'android' in device.platform.lower() or 'ios' in device.platform.lower() or 'iphone' in device.platform.lower() %}
+                                        📱 {{ device.platform }}
+                                    {% elif 'windows' in device.platform.lower() or 'mac' in device.platform.lower() or 'linux' in device.platform.lower() %}
+                                        💻 {{ device.platform }}
+                                    {% else %}
+                                        🖥️ {{ device.platform }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                            
+                            <div class="device-field">
+                                <span class="device-field-label">Модель:</span>
+                                <span class="device-field-value">{{ device.deviceModel }}</span>
+                            </div>
+                            
+                            <div class="device-field">
+                                <span class="device-field-label">ОС:</span>
+                                <span class="device-field-value">{{ device.osVersion }}</span>
+                            </div>
+                            
+                            <div class="device-field">
+                                <span class="device-field-label">User Agent:</span>
+                                <span class="device-field-value" style="font-size: 11px;">{{ device.userAgent }}</span>
+                            </div>
+                            
+                            <div class="device-field">
+                                <span class="device-field-label">HWID:</span>
+                                <span class="device-field-value" style="font-size: 11px;">{{ device.hwid }}</span>
+                            </div>
+                            
+                            <div class="device-field">
+                                <span class="device-field-label">Создан:</span>
+                                <span class="device-field-value" style="font-size: 11px;">{{ device.createdAt[:10] }}</span>
+                            </div>
+                            
+                            <div class="device-field">
+                                <span class="device-field-label">Обновлен:</span>
+                                <span class="device-field-value" style="font-size: 11px;">{{ device.updatedAt[:10] }}</span>
+                            </div>
+                            
+                            <button class="device-delete-btn" onclick="deleteDevice('{{ device.hwid }}', '{{ device.platform }} - {{ device.deviceModel }}')">
+                                🗑️ Удалить устройство
+                            </button>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-devices">📭 Нет зарегистрированных устройств</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert('QuickInstall ссылка скопирована в буфер обмена!');
+            }, function(err) {
+                console.error('Ошибка копирования: ', err);
+                // Fallback для старых браузеров
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('QuickInstall ссылка скопирована в буфер обмена!');
+            });
+        }
+        
+        function deleteClientCache(clientId, telegramUid) {
+            if (confirm('🗑️ Удалить кеш для этого клиента?\\n\\n⚠️ После удаления данные будут запрошены заново у бота.\\n✅ Это поможет обновить устаревшую информацию.')) {
+                // Находим кнопку и добавляем анимацию
+                const button = document.querySelector('.cache-delete-btn');
+                if (button) {
+                    button.disabled = true;
+                    button.style.opacity = '0.7';
+                    button.style.transform = 'scale(0.98)';
+                    button.innerHTML = '⏳ Удаление...';
+                    button.style.background = 'rgba(59, 130, 246, 0.3)';
+                    button.style.animation = 'pulse 1.5s infinite';
+                }
+                
+                console.log('🗑️ Удаление кеша для:', clientId, telegramUid);
+                console.log('URL:', '{{ copy_base }}{{ delete_cache_path }}');
+                
+                // Отправляем запрос на удаление кеша
+                fetch('{{ copy_base }}{{ delete_cache_path }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        client_id: clientId,
+                        telegram_uid: telegramUid
+                    })
+                })
+                .then(response => {
+                    console.log('📡 Ответ сервера:', response.status, response.statusText);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('📋 Данные ответа:', data);
+                    // Убираем анимацию с кнопки
+                    if (button) {
+                        button.style.animation = '';
+                        button.disabled = false;
+                        button.style.opacity = '1';
+                        button.style.transform = 'scale(1)';
+                    }
+                    
+                    if (data.success) {
+                        // Успешное удаление
+                        if (button) {
+                            button.innerHTML = '✅ Удален';
+                            button.style.background = 'rgba(16, 185, 129, 0.3)';
+                            setTimeout(() => {
+                                button.innerHTML = '🗑️ Удалить кеш клиента';
+                                button.style.background = '';
+                            }, 3000);
+                        }
+                        alert('✅ Кеш клиента успешно удален!\\n\\n🔄 При следующем запросе данные будут обновлены.');
+                    } else {
+                        // Ошибка удаления
+                        if (button) {
+                            button.innerHTML = '❌ Ошибка';
+                            button.style.background = 'rgba(239, 68, 68, 0.3)';
+                            setTimeout(() => {
+                                button.innerHTML = '🗑️ Удалить кеш клиента';
+                                button.style.background = '';
+                            }, 3000);
+                        }
+                        alert('❌ Ошибка удаления кеша: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Ошибка:', error);
+                    // Убираем анимацию при ошибке
+                    if (button) {
+                        button.style.animation = '';
+                        button.disabled = false;
+                        button.style.opacity = '1';
+                        button.style.transform = 'scale(1)';
+                        button.innerHTML = '❌ Ошибка';
+                        button.style.background = 'rgba(239, 68, 68, 0.3)';
+                        setTimeout(() => {
+                            button.innerHTML = '🗑️ Удалить кеш клиента';
+                            button.style.background = '';
+                        }, 3000);
+                    }
+                    alert('❌ Произошла ошибка при удалении кеша: ' + error.message);
+                });
+            }
+        }
+        
+        function replaceKey(uuid, subscriptionName) {
+            // Проверяем, есть ли UUID
+            if (!uuid || uuid === 'no-uuid' || uuid === 'None') {
+                alert(`❌ Для подписки "${subscriptionName}" нет UUID для замены ключа.\\n\\nЭто может произойти если:\\n1. Подписка была создана до внедрения системы UUID\\n2. Данные получены не полностью\\n\\nОбратитесь в поддержку для ручной замены ключа.`);
+                return;
+            }
+            
+            // Дополнительная проверка роутерной подписки на frontend
+            const routerPattern = /^[A-Fa-f0-9]{12}-router$/i;
+            if (routerPattern.test(subscriptionName)) {
+                alert(`❌ Замена ключей роутерных подписок запрещена.\\n\\nПодписка "${subscriptionName}" является роутерной и её ключ нельзя заменить.`);
+                return;
+            }
+            
+            if (confirm(`🔄 Заменить ключ для подписки "${subscriptionName}"?\\n\\n⚠️ Старый ключ перестанет работать.\\n✅ Будет создан новый ключ.`)) {
+                // Находим кнопку по UUID и добавляем анимацию
+                const button = document.querySelector(`button[onclick*="${uuid}"]`);
+                if (button) {
+                    button.disabled = true;
+                    button.style.opacity = '0.7';
+                    button.style.transform = 'scale(0.98)';
+                    button.innerHTML = '⏳ Замена...';
+                    button.style.background = 'rgba(59, 130, 246, 0.3)';
+                    button.style.animation = 'pulse 1.5s infinite';
+                }
+                // Получаем параметры из URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const clientId = urlParams.get('client_id');
+                const telegramUid = urlParams.get('telegram_uid');
+                
+                console.log('🔍 Отладка замены ключа:');
+                console.log('  uuid:', uuid);
+                console.log('  clientId:', clientId);
+                console.log('  telegramUid:', telegramUid);
+                console.log('  URL:', '{{ copy_base }}{{ replace_key_path }}');
+                console.log('⏱️ Timeout: 70 секунд (ждем ответ от бота)');
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 70000);
+                
+                fetch('{{ copy_base }}{{ replace_key_path }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        client_id: clientId,
+                        telegram_uid: telegramUid,
+                        uuid: uuid
+                    }),
+                    signal: controller.signal
+                })
+                .then(response => {
+                    clearTimeout(timeoutId);
+                    console.log('📡 Ответ сервера:', response.status, response.statusText);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('📋 Данные ответа:', data);
+                    if (button) {
+                        button.style.animation = '';
+                        button.disabled = false;
+                        button.style.opacity = '1';
+                        button.style.transform = 'scale(1)';
+                    }
+                    
+                    if (data.success) {
+                        if (button) {
+                            button.innerHTML = '✅ Заменен';
+                            button.style.background = 'rgba(16, 185, 129, 0.3)';
+                        }
+                        
+                        if (data.should_refresh) {
+                            alert('✅ ' + data.message + '\\n\\n🔄 Страница будет обновлена для загрузки нового ключа.');
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1500);
+                        } else if (data.new_quickinstall) {
+                            alert('✅ Ключ успешно заменен!\\n\\n🔗 Новый QuickInstall скопирован в буфер обмена');
+                            copyToClipboard(data.new_quickinstall);
+                            setTimeout(() => {
+                                button.innerHTML = '🔄 Заменить ключ';
+                                button.style.background = '';
+                            }, 3000);
+                        }
+                    } else {
+                        if (button) {
+                            button.innerHTML = '❌ Ошибка';
+                            button.style.background = 'rgba(239, 68, 68, 0.3)';
+                            setTimeout(() => {
+                                button.innerHTML = '🔄 Заменить ключ';
+                                button.style.background = '';
+                            }, 3000);
+                        }
+                        alert('❌ Ошибка замены ключа: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    clearTimeout(timeoutId);
+                    console.error('❌ Ошибка:', error);
+                    if (button) {
+                        button.style.animation = '';
+                        button.disabled = false;
+                        button.style.opacity = '1';
+                        button.style.transform = 'scale(1)';
+                        button.innerHTML = '❌ Ошибка';
+                        button.style.background = 'rgba(239, 68, 68, 0.3)';
+                        setTimeout(() => {
+                            button.innerHTML = '🔄 Заменить ключ';
+                            button.style.background = '';
+                        }, 3000);
+                    }
+                    
+                    if (error.name === 'AbortError') {
+                        alert('⏱️ Превышен лимит ожидания (70 секунд).\\n\\nБот слишком долго отвечает. Попробуйте позже или обратитесь в поддержку.');
+                    } else {
+                        alert('❌ Произошла ошибка при замене ключа: ' + error.message);
+                    }
+                });
+            }
+        }
+        
+        function deleteDevice(hwid, deviceName) {
+            if (confirm(`🗑️ Удалить устройство "${deviceName}"?\\n\\nHWID: ${hwid}\\n\\n⚠️ Это действие нельзя отменить.`)) {
+                const button = event.target;
+                if (button) {
+                    button.disabled = true;
+                    button.style.opacity = '0.7';
+                    button.style.transform = 'scale(0.98)';
+                    button.innerHTML = '⏳ Удаление...';
+                    button.style.animation = 'pulse 1.5s infinite';
+                }
+                
+                console.log('🗑️ Удаление устройства:', hwid, deviceName);
+                console.log('📍 copy_base:', '{{ copy_base }}');
+                console.log('📍 delete_device_path:', '{{ delete_device_path }}');
+                console.log('📍 Полный URL:', '{{ copy_base }}{{ delete_device_path }}');
+                
+                {% if remnawave_user and remnawave_user.uuid %}
+                const userUuid = '{{ remnawave_user.uuid }}';
+                {% else %}
+                const userUuid = '';
+                {% endif %}
+                
+                console.log('📋 user_uuid:', userUuid);
+                console.log('📋 hwid:', hwid);
+                
+                const payload = {
+                    user_uuid: userUuid,
+                    hwid: hwid
+                };
+                console.log('📤 Отправляем JSON:', JSON.stringify(payload, null, 2));
+                
+                fetch('{{ copy_base }}{{ delete_device_path }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => {
+                    console.log('📡 Ответ сервера:', response.status, response.statusText);
+                    console.log('📡 response.ok:', response.ok);
+                    console.log('📡 response.url:', response.url);
+                    
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            console.error('❌ Ответ НЕ OK, получен текст:', text.substring(0, 200));
+                            throw new Error(`HTTP ${response.status}: ${text.substring(0, 100)}`);
+                        });
+                    }
+                    
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('📋 Данные ответа:', data);
+                    if (button) {
+                        button.style.animation = '';
+                        button.disabled = false;
+                        button.style.opacity = '1';
+                        button.style.transform = 'scale(1)';
+                    }
+                    
+                    if (data.success) {
+                        if (button) {
+                            button.innerHTML = '✅ Удалено';
+                            button.style.background = 'rgba(16, 185, 129, 0.3)';
+                        }
+                        alert('✅ Устройство успешно удалено!\\n\\n🔄 Страница будет обновлена.');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    } else {
+                        if (button) {
+                            button.innerHTML = '❌ Ошибка';
+                            setTimeout(() => {
+                                button.innerHTML = '🗑️ Удалить устройство';
+                                button.style.background = '';
+                            }, 3000);
+                        }
+                        alert('❌ Ошибка удаления устройства: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Ошибка:', error);
+                    if (button) {
+                        button.style.animation = '';
+                        button.disabled = false;
+                        button.style.opacity = '1';
+                        button.style.transform = 'scale(1)';
+                        button.innerHTML = '❌ Ошибка';
+                        setTimeout(() => {
+                            button.innerHTML = '🗑️ Удалить устройство';
+                            button.style.background = '';
+                        }, 3000);
+                    }
+                    alert('❌ Произошла ошибка при удалении устройства: ' + error.message);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,159 @@
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: linear-gradient(135deg, #60a5fa 0%, #2563eb 70%, #1e40af 100%); padding: 12px; line-height: 1.4; border-radius: 32px; min-height: 400px;">
+  <div style="width: 100%; margin: 0; border-radius: 32px; overflow: hidden; position: relative; backdrop-filter: blur(60px); background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.25); box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.25); padding: 16px;">
+    
+    <!-- Главный заголовок с компактными Telegram карточками ПОВЕРХ -->
+    <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(60px); color: #ffffff; padding: 18px 20px; border-radius: 28px; margin-bottom: 16px; position: relative; border: 1.5px solid rgba(255, 255, 255, 0.3); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35);">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 28px 28px 0 0;"></div>
+      
+      <!-- Основная информация -->
+      <div style="font-size: 20px; font-weight: 900; display: flex; align-items: center; gap: 10px; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);">
+        <span style="font-size: 24px;">🔐</span>
+        <span>Информация о подписках</span>
+      </div>
+      <div style="font-size: 15px; font-weight: 600; opacity: 0.95; margin-top: 4px;">{{ client_name }}</div>
+      
+      <!-- Компактные Telegram карточки ПОВЕРХ -->
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px;">
+        <!-- Telegram -->
+        <div style="border-radius: 20px; padding: 10px 14px; background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(40px); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.35); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.4); position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);"></div>
+          <div style="font-size: 9px; opacity: 0.85; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);">Telegram</div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 4px; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);">{{ telegram_username }}</div>
+        </div>
+        
+        <!-- Telegram UID -->
+        <div style="border-radius: 20px; padding: 10px 14px; background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(40px); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.35); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.4); position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);"></div>
+          <div style="font-size: 9px; opacity: 0.85; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);">Telegram UID</div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 4px; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);">{{ telegram_uid }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Заголовок секции подписок с кнопками (НОВАЯ СТРУКТУРА) -->
+    <div style="margin: 16px 0 14px 0; display: flex; flex-direction: column; gap: 10px;">
+      <!-- Заголовок "Подписки" на всю ширину -->
+      <div style="background: rgba(255, 255, 255, 0.14); backdrop-filter: blur(60px); border-radius: 24px; padding: 12px 18px; border: 1.5px solid rgba(255, 255, 255, 0.3); box-shadow: 0 10px 36px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2.5px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 24px 24px 0 0;"></div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 22px;">📝</span>
+          <span style="font-size: 20px; font-weight: 900; color: #ffffff; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);">Подписки</span>
+        </div>
+      </div>
+      
+      <!-- Кнопки "Управление" и "Чеклист" в одну строку -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <!-- Кнопка: Управление подписками -->
+        <a href="{{ copy_base }}{{ manage_keys_path }}?client_id={{ client_id }}&telegram_uid={{ telegram_uid }}" target="_blank" rel="noopener" style="text-decoration: none;">
+          <div style="cursor: pointer; border-radius: 22px; padding: 10px 18px; background: rgba(255, 255, 255, 0.17); backdrop-filter: blur(60px); color: #ffffff; font-size: 14px; font-weight: 800; border: 1.5px solid rgba(255, 255, 255, 0.35); box-shadow: 0 10px 36px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); display: flex; align-items: center; justify-content: center; gap: 7px; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 2.5px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 22px 22px 0 0;"></div>
+            <span style="font-size: 17px;">🔧</span>
+            <span>Управление подписками</span>
+          </div>
+        </a>
+        
+        <!-- Кнопка: Чеклист поддержки -->
+        <a href="{{ copy_base }}/aljsdhfaljsdhflahsjdflaksjhdflasjlkfjaslkdfjalsdjflaksjdflkasjflkajsdklfjal_checklist_outline_fooowtfoooo" target="_blank" rel="noopener" style="text-decoration: none;">
+          <div style="cursor: pointer; border-radius: 22px; padding: 10px 18px; background: rgba(34, 197, 94, 0.22); backdrop-filter: blur(60px); color: #ffffff; font-size: 14px; font-weight: 800; border: 1.5px solid rgba(34, 197, 94, 0.45); box-shadow: 0 10px 36px rgba(34, 197, 94, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); display: flex; align-items: center; justify-content: center; gap: 7px; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 2.5px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 22px 22px 0 0;"></div>
+            <span style="font-size: 17px;">📋</span>
+            <span>Чеклист поддержки</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- RemnaWave последнее устройство -->
+    {% if remnawave_user and remnawave_user.subLastUserAgent %}
+    <div style="margin: 14px 0; padding: 14px 20px; border-radius: 26px; background: rgba(255, 255, 255, 0.16); backdrop-filter: blur(60px); border: 1.5px solid rgba(255, 255, 255, 0.3); box-shadow: 0 10px 36px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 2.5px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 26px 26px 0 0;"></div>
+      <div style="font-size: 11px; opacity: 0.85; color: #ffffff; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); margin-bottom: 8px;">Последнее устройство RemnaWave</div>
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        {% set app_parts = remnawave_user.subLastUserAgent.split('/') %}
+        {% if app_parts|length >= 2 %}
+          {% set app_name = app_parts[0] %}
+          {% set platform = app_parts[1] %}
+          
+          {% if 'android' in platform.lower() or 'ios' in platform.lower() or 'iphone' in platform.lower() %}
+            {% set platform_emoji = '📱' %}
+          {% elif 'windows' in platform.lower() or 'mac' in platform.lower() or 'linux' in platform.lower() %}
+            {% set platform_emoji = '💻' %}
+          {% else %}
+            {% set platform_emoji = '🖥️' %}
+          {% endif %}
+          
+          <span style="font-size: 18px;">{{ platform_emoji }}</span>
+          <span style="font-size: 15px; font-weight: 800; color: #ffffff; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);">{{ app_name }}</span>
+          <span style="font-size: 14px; opacity: 0.7; color: #ffffff;">:</span>
+          <span style="font-size: 15px; font-weight: 800; color: #ffffff; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);">{{ platform }}</span>
+        {% else %}
+          <span style="font-size: 18px;">🖥️</span>
+          <span style="font-size: 15px; font-weight: 800; color: #ffffff; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);">{{ remnawave_user.subLastUserAgent }}</span>
+        {% endif %}
+      </div>
+    </div>
+    {% elif remnawave_error %}
+      {% if remnawave_error == 'no_remnawave_subscription' %}
+      <div style="margin: 14px 0; padding: 12px 18px; border-radius: 24px; background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(60px); border: 1.5px solid rgba(255, 255, 255, 0.25); box-shadow: 0 10px 36px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2.5px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 24px 24px 0 0;"></div>
+        <div style="font-size: 13px; color: #ffffff; text-align: center; opacity: 0.9; font-weight: 700; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);">ℹ️ У юзера нет подписки RemnaWave</div>
+      </div>
+      {% elif remnawave_error == 'api_unauthorized' %}
+      <div style="margin: 14px 0; padding: 12px 18px; border-radius: 24px; background: rgba(239, 68, 68, 0.22); backdrop-filter: blur(60px); border: 1.5px solid rgba(239, 68, 68, 0.45); box-shadow: 0 10px 36px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2.5px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 24px 24px 0 0;"></div>
+        <div style="font-size: 13px; color: #ffffff; text-align: center; font-weight: 800; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);">🚨 Опа, api ремны чет не пашет... Напиши Саше, он разберется)</div>
+      </div>
+      {% else %}
+      <div style="margin: 14px 0; padding: 12px 18px; border-radius: 24px; background: rgba(245, 158, 11, 0.22); backdrop-filter: blur(60px); border: 1.5px solid rgba(245, 158, 11, 0.45); box-shadow: 0 10px 36px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2.5px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 24px 24px 0 0;"></div>
+        <div style="font-size: 13px; color: #ffffff; text-align: center; opacity: 0.9; font-weight: 700; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);">⚠️ RemnaWave API недоступен</div>
+      </div>
+      {% endif %}
+    {% endif %}
+
+    <!-- Список подписок (КОМПАКТНЫЙ) -->
+    {% if no_subscriptions_message %}
+      <div style="padding: 20px; text-align: center; border-radius: 26px; background: rgba(255, 255, 255, 0.16); backdrop-filter: blur(60px); border: 1.5px solid rgba(255, 255, 255, 0.3); box-shadow: 0 10px 36px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2.5px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 26px 26px 0 0;"></div>
+        <div style="font-size: 19px; margin-bottom: 7px;">📭</div>
+        <div style="font-size: 17px; color: #ffffff; font-weight: 800; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);">{{ no_subscriptions_message }}</div>
+        <div style="font-size: 13px; color: rgba(255, 255, 255, 0.85); margin-top: 6px; font-weight: 600;">У клиента нет активных подписок</div>
+      </div>
+    {% elif subscriptions_count > 0 %}
+      {% for subscription in subscriptions_data %}
+      <div style="border-radius: 26px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; position: relative; backdrop-filter: blur(60px); border: 1.5px solid rgba(255, 255, 255, 0.25); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden;
+        {% if subscription.status == 'active' %}
+          background: rgba(16, 185, 129, 0.22); color: #ffffff; box-shadow: 0 10px 36px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        {% elif subscription.status == 'expiring' %}
+          background: rgba(245, 158, 11, 0.22); color: #ffffff; box-shadow: 0 10px 36px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        {% elif subscription.status == 'expired' %}
+          background: rgba(239, 68, 68, 0.22); color: #ffffff; box-shadow: 0 10px 36px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        {% else %}
+          background: rgba(107, 114, 128, 0.22); color: #ffffff; box-shadow: 0 10px 36px rgba(107, 114, 128, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        {% endif %}">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2.5px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 26px 26px 0 0;"></div>
+        <div>
+          <div style="font-size: 17px; font-weight: 900; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);">{{ subscription.name }}</div>
+          <div style="font-size: 13px; opacity: 0.92; margin-top: 4px; font-weight: 700; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);">До: {{ subscription.expires }}{% if subscription.days_left_short %} ({{ subscription.days_left_short }}){% endif %}</div>
+        </div>
+        <div style="padding: 7px 14px; border-radius: 18px; font-size: 12px; font-weight: 900; backdrop-filter: blur(60px); border: 1.5px solid rgba(255, 255, 255, 0.45); text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); background: rgba(255, 255, 255, 0.3); color: #ffffff;">{{ subscription.status_text }}</div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div style="padding: 20px; text-align: center; border-radius: 26px; background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(60px); border: 1.5px solid rgba(255, 255, 255, 0.25); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2.5px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 26px 26px 0 0;"></div>
+        <div style="font-size: 15px; color: #ffffff; font-style: italic; opacity: 0.85;">Подписки не найдены</div>
+        {% if error_msg %}
+        <div style="color: #ff6b6b; font-size: 13px; margin-top: 7px;">{{ error_msg }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    {% if from_cache %}
+    <div style="margin-top: 12px; padding: 10px 14px; border-radius: 20px; background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(60px); border: 1px solid rgba(255, 255, 255, 0.25); position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent); border-radius: 20px 20px 0 0;"></div>
+      <div style="font-size: 11px; color: #ffffff; font-style: italic; text-align: center; opacity: 0.85;">⚡ Данные из кеша</div>
+    </div>
+    {% endif %}
+  </div>
+</div>

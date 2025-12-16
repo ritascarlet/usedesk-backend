@@ -1,0 +1,13 @@
+Flask[async]==2.3.3
+Flask-CORS==4.0.0
+Telethon==1.31.1
+requests==2.31.0
+python-dotenv==1.0.0
+asyncio==3.4.3
+gunicorn==21.2.0
+pyinstaller==6.0.0
+markdown==3.6
+pymdown-extensions==10.8.1
+python-dateutil==2.9.0
+tenacity==9.0.0
+pydantic==2.10.1

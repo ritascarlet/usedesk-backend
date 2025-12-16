@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ checklist_title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #60a5fa 0%, #2563eb 70%, #1e40af 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(60px);
+            border-radius: 32px;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 40px);
+        }
+
+        /* Заголовок */
+        .header {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px);
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.25);
+            color: white;
+            padding: 22px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header-meta {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 22px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(60px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-refresh {
+            background: rgba(255, 255, 255, 0.22);
+            color: white;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+        }
+
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.28);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-close {
+            background: rgba(255, 255, 255, 0.22);
+            color: white;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+        }
+
+        .btn-close:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.28);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        /* Основной контейнер с сайдбаром */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Навигация по документам (сайдбар) */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(60px);
+            border-right: 1.5px solid rgba(255, 255, 255, 0.2);
+            overflow-y: auto;
+            padding: 18px 0;
+        }
+
+        .sidebar-title {
+            padding: 0 18px 14px;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 1px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-item {
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.9);
+            border-radius: 0 24px 24px 0;
+            margin-right: 8px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(4px);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(60px);
+            border-left-color: #ffffff;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-item-icon {
+            font-size: 18px;
+        }
+
+        .nav-item-title {
+            font-size: 14px;
+            flex: 1;
+        }
+
+        /* Область контента документа */
+        .document-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 36px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(60px);
+        }
+
+        .document-content {
+            display: none;
+        }
+
+        .document-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Markdown стили */
+        .markdown-content h1 {
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.98);
+            margin: 0 0 20px 0;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            font-weight: 900;
+        }
+
+        .markdown-content h2 {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.95);
+            margin: 30px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .markdown-content h3 {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.92);
+            margin: 25px 0 12px 0;
+            font-weight: 700;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .markdown-content p {
+            margin: 12px 0;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.88);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+
+        .markdown-content ul, .markdown-content ol {
+            margin: 15px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .markdown-content ul li, .markdown-content ol li {
+            position: relative;
+            padding: 10px 0 10px 35px;
+            margin: 8px 0;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.88);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Чекбоксы - просто отображение */
+        .markdown-content ul li::before {
+            content: '□';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .markdown-content ul li.checked::before {
+            content: '☑';
+            color: #22c55e;
+        }
+
+        .markdown-content ol {
+            counter-reset: item;
+        }
+
+        .markdown-content ol li::before {
+            content: counter(item) ".";
+            counter-increment: item;
+            position: absolute;
+            left: 0;
+            top: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 700;
+        }
+
+        .markdown-content code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            color: #fcd34d;
+        }
+
+        .markdown-content pre {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            color: #e0e7ff;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .markdown-content pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid rgba(96, 165, 250, 0.5);
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #bfdbfe;
+            font-style: italic;
+            background: rgba(96, 165, 250, 0.05);
+            padding: 10px 15px;
+            border-radius: 4px;
+        }
+
+        /* Outline Callouts */
+        .markdown-content .callout {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .markdown-content .callout-icon {
+            font-size: 20px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .markdown-content .callout-content {
+            flex: 1;
+            line-height: 1.6;
+        }
+
+        .markdown-content .callout-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: #ef4444;
+            color: #fca5a5;
+        }
+
+        .markdown-content .callout-info {
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: #3b82f6;
+            color: #93c5fd;
+        }
+
+        .markdown-content .callout-tip {
+            background: rgba(34, 197, 94, 0.1);
+            border-left-color: #22c55e;
+            color: #86efac;
+        }
+
+        .markdown-content .callout-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left-color: #10b981;
+            color: #6ee7b7;
+        }
+
+        .markdown-content a {
+            color: #60a5fa;
+            text-decoration: underline;
+            transition: all 0.2s;
+        }
+
+        .markdown-content a:hover {
+            color: #93c5fd;
+        }
+
+        .markdown-content hr {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 20px 0;
+        }
+
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .markdown-content table th,
+        .markdown-content table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+        }
+
+        .markdown-content table th {
+            background: rgba(96, 165, 250, 0.2);
+            color: #ffffff;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(96, 165, 250, 0.3);
+        }
+
+        .markdown-content table td {
+            color: #e0e7ff;
+        }
+
+        .markdown-content table tr:hover {
+            background: rgba(96, 165, 250, 0.05);
+        }
+
+        .markdown-content table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Ошибка/предупреждение */
+        .error-box {
+            background: #fee;
+            border: 1px solid #fcc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #c33;
+        }
+
+        /* Мобильная адаптация */
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            body {
+                padding: 0;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+                max-height: 200px;
+            }
+
+            .document-area {
+                padding: 20px;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .btn {
+                flex: 1;
+            }
+        }
+
+        /* Загрузка */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2563eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Заголовок -->
+        <div class="header">
+            <div class="header-left">
+                <h1>📋 {{ checklist_title }}</h1>
+                <div class="header-meta">
+                    {% if from_outline %}
+                        ✅ Из Outline ({{ documents|length }} документов)
+                    {% else %}
+                        ⚠️ Офлайн версия
+                    {% endif %}
+                    {% if from_cache %}
+                        · ⚡ Из кеша
+                    {% endif %}
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-refresh" onclick="refreshChecklist()">
+                    🔄 Обновить
+                </button>
+                <button class="btn btn-close" onclick="window.close()">
+                    ✕ Закрыть
+                </button>
+            </div>
+        </div>
+
+        <!-- Основной контент -->
+        <div class="main-content">
+            <!-- Навигация (сайдбар) -->
+            <div class="sidebar">
+                <div class="sidebar-title">📚 Документы</div>
+                {% for doc in documents %}
+                <div class="nav-item {% if loop.first %}active{% endif %}" 
+                     data-doc-id="{{ doc.id }}"
+                     onclick="switchDocument('{{ doc.id }}')">
+                    {% if doc.icon %}
+                    <span class="nav-item-icon">{{ doc.icon }}</span>
+                    {% else %}
+                    <span class="nav-item-icon">📄</span>
+                    {% endif %}
+                    <span class="nav-item-title">{{ doc.title }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Область документов -->
+            <div class="document-area">
+                {% if error_message %}
+                <div class="error-box">
+                    ⚠️ {{ error_message }}
+                </div>
+                {% endif %}
+
+                {% for doc in documents %}
+                <div class="document-content {% if loop.first %}active{% endif %}" 
+                     data-doc-id="{{ doc.id }}">
+                    <div class="markdown-content" id="content-{{ doc.id }}">
+                        <h1>{{ doc.title }}</h1>
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            Загрузка контента...
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% if not documents %}
+                <div class="loading">
+                    <p style="font-size: 16px; color: #999;">📄 Нет документов для отображения</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Данные документов из backend
+        const documents = {{ documents | tojson | safe }};
+
+        console.log('📄 Загружено документов:', documents.length);
+
+        // 🎉 MARKDOWN → HTML конвертация делается на сервере!
+        // Просто вставляем готовый HTML из backend
+        documents.forEach(doc => {
+            const container = document.getElementById(`content-${doc.id}`);
+            if (container && doc.content) {
+                // content уже содержит готовый HTML от markdown библиотеки
+                container.innerHTML = doc.content;
+            } else if (container) {
+                container.innerHTML = '<h1>' + doc.title + '</h1><p style="color: #999;">Контент недоступен</p>';
+            }
+        });
+
+        // Переключение между документами
+        function switchDocument(docId) {
+            console.log('📄 Переключаемся на документ:', docId);
+
+            // Убираем активный класс со всех элементов навигации
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Добавляем активный класс к выбранному элементу
+            document.querySelector(`.nav-item[data-doc-id="${docId}"]`).classList.add('active');
+
+            // Скрываем все документы
+            document.querySelectorAll('.document-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Показываем выбранный документ
+            document.querySelector(`.document-content[data-doc-id="${docId}"]`).classList.add('active');
+        }
+
+        // Обновление чеклиста
+        async function refreshChecklist() {
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Обновляем...';
+
+            try {
+                const response = await fetch('/api/checklist/refresh', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('❌ Не удалось обновить: ' + (data.message || data.error));
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            } catch (error) {
+                alert('❌ Ошибка обновления: ' + error.message);
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
+        console.log('✅ Чеклист загружен, документов:', documents.length);
+    </script>
+</body>
+</html>

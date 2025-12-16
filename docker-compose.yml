@@ -1,0 +1,71 @@
+services:
+  usedesk-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
+    container_name: usedesk-backend
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Переменные окружения из .env файла
+    env_file:
+      - .env
+    
+    # Переменные окружения (можно переопределить)
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FLASK_APP=backend.app
+      - FLASK_ENV=production
+    
+    # Проброс портов
+    ports:
+      - "5000:5000"
+    
+    # Volumes для персистентности данных
+    volumes:
+      # Кеш бота (named volume - Docker управляет правами автоматически)
+      - usedesk-cache:/app/cache
+      # Telegram сессия (создается при первом запуске)
+      - ./admin_session.session:/app/admin_session.session
+      # Логи (named volume)
+      - usedesk-logs:/app/logs
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Ограничения ресурсов (опционально, настройте под свои нужды)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    
+    # Логирование
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Volumes - Docker сам управляет правами доступа
+volumes:
+  usedesk-cache:
+    driver: local
+  usedesk-logs:
+    driver: local
+
+# Networks (опционально, если нужно подключить другие сервисы)
+networks:
+  default:
+    name: usedesk-network
+

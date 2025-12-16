@@ -1,0 +1,91 @@
+"""
+Константы приложения
+Все магические числа и строки должны быть здесь!
+"""
+
+
+SUBSCRIPTION_EXPIRING_THRESHOLD_DAYS = 14
+SUBSCRIPTION_CRITICAL_THRESHOLD_DAYS = 3
+
+SUBSCRIPTION_STATUS_ACTIVE = 'active'
+SUBSCRIPTION_STATUS_EXPIRING = 'expiring'
+SUBSCRIPTION_STATUS_EXPIRED = 'expired'
+SUBSCRIPTION_STATUS_UNKNOWN = 'unknown'
+
+SUBSCRIPTION_TYPE_ROUTER = '🔧 Роутер'
+SUBSCRIPTION_TYPE_CLIENT = '📱 Клиент'
+
+
+ROUTER_KEYWORDS = ['router', 'роутер', 'mikrotik', 'keenetic']
+
+TELEGRAM_UID_PATTERN = r'^\d+$'
+
+TELEGRAM_DEFAULT_TIMEOUT = 30
+TELEGRAM_REPLACE_KEY_TIMEOUT = 60
+
+TELEGRAM_MAX_RETRY_ATTEMPTS = 3
+TELEGRAM_RETRY_MIN_WAIT = 2
+TELEGRAM_RETRY_MAX_WAIT = 10
+
+
+QUICKINSTALL_BASE_URL = "https://domain.com"
+QUICKINSTALL_CHOOSE_DEVICE_PATH = "/choose_device"
+
+QUICKINSTALL_URL_PATTERN = r'https://domain\.com/choose_device\?url=([^\s\)\,\"]+)'
+
+
+CACHE_DEFAULT_TTL = 3600
+CACHE_BOT_RESPONSE_TTL = 300
+
+CACHE_DIR_NAME = "cache"
+CACHE_FILE_NAME = "bot_responses.json"
+
+
+DATE_FORMAT_DD_MM_YY = "%d.%m.%y"
+DATE_FORMAT_DD_MM_YYYY = "%d.%m.%Y"
+
+DAYS_LEFT_FORMAT_SHORT = "{days}д"
+DAYS_LEFT_FORMAT_LONG = "через {days} дн."
+DAYS_LEFT_FORMAT_EXPIRED_SHORT = "-{days}д"
+DAYS_LEFT_FORMAT_EXPIRED_LONG = "истек {days} дн. назад"
+
+DAYS_LEFT_TODAY = "сегодня"
+DAYS_LEFT_TOMORROW = "завтра"
+DAYS_LEFT_UNKNOWN = "неизвестно"
+
+
+USEDESK_TEMPLATE_CLIENT_ID = "{{client_id}}"
+
+MESSENGER_TYPE_TELEGRAM = 'telegram'
+
+
+HTTP_OK = 200
+HTTP_BAD_REQUEST = 400
+HTTP_INTERNAL_ERROR = 500
+
+
+LOG_EMOJI_TARGET = "🎯"
+LOG_EMOJI_SUCCESS = "✅"
+LOG_EMOJI_ERROR = "❌"
+LOG_EMOJI_WARNING = "⚠️"
+LOG_EMOJI_INFO = "ℹ️"
+LOG_EMOJI_DEBUG = "🔍"
+LOG_EMOJI_DETECTIVE = "🕵️"
+LOG_EMOJI_VICTORY = "🏆"
+LOG_EMOJI_PHONE = "📱"
+LOG_EMOJI_HOOK = "🎣"
+
+
+OUTLINE_CALLOUT_WARNING = 'warning'
+OUTLINE_CALLOUT_INFO = 'info'
+OUTLINE_CALLOUT_TIP = 'tip'
+OUTLINE_CALLOUT_SUCCESS = 'success'
+OUTLINE_CALLOUT_DANGER = 'danger'
+
+
+MIN_TELEGRAM_UID_LENGTH = 5
+MAX_TELEGRAM_UID_LENGTH = 20
+
+MIN_SUBSCRIPTION_NAME_LENGTH = 1
+MAX_SUBSCRIPTION_NAME_LENGTH = 255
+
